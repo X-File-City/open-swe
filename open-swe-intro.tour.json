@@ -1,0 +1,194 @@
+{
+  "id": "open-swe-intro",
+  "title": "Open SWE: Autonomous Coding Agent Framework",
+  "description": "A guided tour of Open SWE, an open-source framework for building internal coding agents that operate in isolated cloud sandboxes. Learn how webhooks, agent orchestration, tools, middleware, and sandbox integrations work together.",
+  "version": "1.0.0",
+  "steps": [
+    {
+      "id": "overview",
+      "title": "Welcome to Open SWE",
+      "description": "Open SWE is a production-ready framework for building AI coding agents that autonomously handle software engineering tasks like bug fixes, feature implementations, and code reviews. It composes on Deep Agents and LangGraph, with integrations for GitHub, Linear, and Slack. The codebase is a single Python package with all source code under the `agent/` directory.",
+      "colorMode": "fileTypes",
+      "focusDirectory": ""
+    },
+    {
+      "id": "agent-core",
+      "title": "Core Entry Points",
+      "description": "Three files form the heart of Open SWE. `server.py` creates and manages the Deep Agent via `get_agent()`. `webapp.py` is the FastAPI application handling webhooks from GitHub, Linear, and Slack. `prompt.py` constructs the system prompt with context, tools, and instructions. Everything flows from webhook to agent to result.",
+      "focusDirectory": "agent",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "core-entry-points",
+          "name": "Core Entry Points",
+          "color": "#ef4444",
+          "items": [
+            { "path": "agent/server.py", "type": "file" },
+            { "path": "agent/webapp.py", "type": "file" },
+            { "path": "agent/prompt.py", "type": "file" }
+          ],
+          "opacity": 0.8,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "webhook-flow",
+      "title": "Webhook-Driven Architecture",
+      "description": "Open SWE is event-driven. When a GitHub issue comment, Linear update, or Slack mention arrives, `webapp.py` validates the request, extracts context (PR diffs, issue details, thread history), creates a LangGraph thread with metadata, and triggers the agent. Each issue or thread maps to a persistent sandbox that is reused across follow-up messages.",
+      "focusDirectory": "agent",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "webhook-handler",
+          "name": "Webhook Handler",
+          "color": "#f59e0b",
+          "items": [
+            { "path": "agent/webapp.py", "type": "file" }
+          ],
+          "opacity": 0.8,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Custom Tool Suite",
+      "description": "The `tools/` directory contains six custom tools the agent can invoke: `commit_and_open_pr` for git operations, `fetch_url` for web scraping, `http_request` for API calls, and integration-specific tools for Linear, Slack, and GitHub commenting. These complement built-in Deep Agents tools like `read_file`, `edit_file`, `grep`, and `task`.",
+      "focusDirectory": "agent/tools",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "tools-layer",
+          "name": "Custom Tools",
+          "color": "#3b82f6",
+          "items": [
+            { "path": "agent/tools/commit_and_open_pr.py", "type": "file" },
+            { "path": "agent/tools/fetch_url.py", "type": "file" },
+            { "path": "agent/tools/http_request.py", "type": "file" },
+            { "path": "agent/tools/linear_comment.py", "type": "file" },
+            { "path": "agent/tools/slack_thread_reply.py", "type": "file" },
+            { "path": "agent/tools/github_comment.py", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "middleware",
+      "title": "Middleware Pipeline",
+      "description": "Middleware provides safety nets and enhancements around the agent loop. `check_message_queue` injects follow-up messages before model calls. `tool_error_handler` ensures graceful degradation on tool failures. `ensure_no_empty_msg` prevents blank responses. `open_pr` is a critical safety net that opens a PR if the agent completes without doing so.",
+      "focusDirectory": "agent/middleware",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "middleware-layer",
+          "name": "Middleware",
+          "color": "#8b5cf6",
+          "items": [
+            { "path": "agent/middleware/check_message_queue.py", "type": "file" },
+            { "path": "agent/middleware/tool_error_handler.py", "type": "file" },
+            { "path": "agent/middleware/ensure_no_empty_msg.py", "type": "file" },
+            { "path": "agent/middleware/open_pr.py", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "integrations",
+      "title": "Pluggable Sandbox Providers",
+      "description": "The `integrations/` directory implements the pluggable sandbox architecture. Each provider (LangSmith, Daytona, Modal, RunLoop, Local) follows a factory pattern selected by the `SANDBOX_TYPE` environment variable. LangSmith is the default. Sandboxes provide isolated execution environments where the agent clones repos and runs code safely.",
+      "focusDirectory": "agent/integrations",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "sandbox-providers",
+          "name": "Sandbox Providers",
+          "color": "#10b981",
+          "items": [
+            { "path": "agent/integrations/langsmith.py", "type": "file" },
+            { "path": "agent/integrations/daytona.py", "type": "file" },
+            { "path": "agent/integrations/modal.py", "type": "file" },
+            { "path": "agent/integrations/runloop.py", "type": "file" },
+            { "path": "agent/integrations/local.py", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "utils",
+      "title": "Utilities & Integration Helpers",
+      "description": "The `utils/` directory is the largest subdirectory with 19 files handling GitHub operations (PRs, tokens, comments, app auth), Linear and Slack integrations, sandbox lifecycle management (factory, state, paths), authentication, encryption, and message processing. These utilities wire the external services to the agent core.",
+      "focusDirectory": "agent/utils",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "github-utils",
+          "name": "GitHub Utilities",
+          "color": "#6366f1",
+          "items": [
+            { "path": "agent/utils/github.py", "type": "file" },
+            { "path": "agent/utils/github_app.py", "type": "file" },
+            { "path": "agent/utils/github_token.py", "type": "file" },
+            { "path": "agent/utils/github_comments.py", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        },
+        {
+          "id": "sandbox-utils",
+          "name": "Sandbox Management",
+          "color": "#14b8a6",
+          "items": [
+            { "path": "agent/utils/sandbox.py", "type": "file" },
+            { "path": "agent/utils/sandbox_state.py", "type": "file" },
+            { "path": "agent/utils/sandbox_paths.py", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "testing",
+      "title": "Tests & Quality",
+      "description": "The `tests/` directory contains unit tests covering webhooks, middleware, authentication, multimodal handling, and sandbox paths. CI runs via GitHub Actions with ruff for linting/formatting and pytest for tests. The project uses semantic PR title conventions enforced by CI.",
+      "focusDirectory": "tests",
+      "colorMode": "fileTypes"
+    },
+    {
+      "id": "config-and-deploy",
+      "title": "Configuration & Deployment",
+      "description": "Root configuration ties everything together. `pyproject.toml` defines dependencies and dev tools. `langgraph.json` configures LangGraph Cloud deployment, pointing to the graph (`agent.server:get_agent`) and HTTP app (`agent.webapp:app`). The `Dockerfile` builds a multi-language sandbox image with Python, Node.js, Go, and Docker CLI. The `Makefile` provides dev commands: `make dev`, `make run`, `make format`, `make lint`, `make test`.",
+      "focusDirectory": "",
+      "colorMode": "fileTypes",
+      "highlightLayers": [
+        {
+          "id": "config-files",
+          "name": "Configuration",
+          "color": "#f97316",
+          "items": [
+            { "path": "pyproject.toml", "type": "file" },
+            { "path": "langgraph.json", "type": "file" },
+            { "path": "Dockerfile", "type": "file" },
+            { "path": "Makefile", "type": "file" }
+          ],
+          "opacity": 0.7,
+          "renderStrategy": "border"
+        }
+      ]
+    },
+    {
+      "id": "full-picture",
+      "title": "The Complete Picture",
+      "description": "Open SWE follows a clear request flow: Webhook arrives at webapp.py, context is extracted and a LangGraph thread is created, server.py provisions a sandbox and constructs the agent, the agent loop runs with custom tools and middleware safety nets, and results are posted back to the originating service. The framework is designed to be forked and customized with org-specific tools, integrations, and conventions via AGENTS.md files.",
+      "focusDirectory": "",
+      "colorMode": "fileTypes"
+    }
+  ]
+}
