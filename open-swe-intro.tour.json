@@ -54,7 +54,7 @@
     {
       "id": "tools",
       "title": "Custom Tool Suite",
-      "description": "The `tools/` directory contains six custom tools the agent can invoke: `commit_and_open_pr` for git operations, `fetch_url` for web scraping, `http_request` for API calls, and integration-specific tools for Linear, Slack, and GitHub commenting. These complement built-in Deep Agents tools like `read_file`, `edit_file`, `grep`, and `task`.",
+      "description": "The tools directory contains six custom tools the agent can invoke: one for committing code and opening pull requests, one for fetching web pages, one for making HTTP requests, and integration-specific tools for posting to Linear, Slack, and GitHub. These complement built-in Deep Agents tools for reading files, editing files, searching code, and spawning sub-tasks.",
       "focusDirectory": "agent/tools",
       "colorMode": "fileTypes",
       "highlightLayers": [
@@ -78,7 +78,7 @@
     {
       "id": "middleware",
       "title": "Middleware Pipeline",
-      "description": "Middleware provides safety nets and enhancements around the agent loop. `check_message_queue` injects follow-up messages before model calls. `tool_error_handler` ensures graceful degradation on tool failures. `ensure_no_empty_msg` prevents blank responses. `open_pr` is a critical safety net that opens a PR if the agent completes without doing so.",
+      "description": "Middleware provides safety nets and enhancements around the agent loop. The message queue checker injects follow-up messages before model calls. The tool error handler ensures graceful degradation on tool failures. The empty message guard prevents blank responses. The pull request opener is a critical safety net that creates a PR if the agent completes without doing so.",
       "focusDirectory": "agent/middleware",
       "colorMode": "fileTypes",
       "highlightLayers": [
